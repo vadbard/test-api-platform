@@ -1,0 +1,30 @@
+services:
+    app:
+        user: app
+        build:
+            context: .
+            args:
+                USER_ID: ${USER_ID:-1000}
+        volumes:
+            - ./src:/app
+        ports:
+            - "8080:8080"
+
+    # redis:
+    #     image: redis:7.0-alpine3.16
+    #     ports:
+    #         - 6379:6379
+
+    database:
+        image: postgres:${POSTGRES_VERSION:-16}-alpine
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-app}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
+            POSTGRES_USER: ${POSTGRES_USER:-app}
+        volumes:
+          - database_data:/var/lib/postgresql/data:rw
+        ports:
+            - "5432:5432"
+
+volumes:
+  database_data:
